@@ -43,4 +43,8 @@ export class AuthController {
       email: user?.email,
     };
   }
+  @Post('login')
+  login(@Body() loginUserDto: LoginUserDto) {
+    return this.authService.userLogin(loginUserDto);
+  }
 }

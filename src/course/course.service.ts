@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { Course } from './schemas/course.schema';
@@ -17,13 +17,21 @@ export class CourseService {
       price: createCourseDto.price,
     });
   }
+  async findAll() {
+    try {
+      const courses = await this.courseModel.find();
 
-  findAll() {
-    return `This action returns all course`;
+      return {
+        success: true,
+        message: 'Courses fetched successfully',
+        data: courses,
+      };
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to fetch courses');
+    }
   }
-
-  findOne(id: number) {
-    return `This action returns a #${id} course`;
+  async findOne(id: string) {
+    return await this.courseModel.findOne({ _id: id });
   }
 
   update(id: number, updateCourseDto: UpdateCourseDto) {
